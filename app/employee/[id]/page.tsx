@@ -6,6 +6,10 @@ import EmployeeTable from "@/Components/EmployeeTable";
 import Attendance from "@/Components/Attendance";
 import TyresProductionButton from "@/Components/TyresProductionButton";
 import ProductionTable from "@/Components/production/ProductionTable";
+import MaintenanceTable from "@/Components/maintenance/MaintenanceTable";
+import SalesTable from "@/Components/Sales/SalesTable";
+import QualityTable from "@/Components/quality/QualityTable";
+import CafeTable from "@/Components/cafe/CafeTable";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { tableSchemas } from "@/data/tableSchemas";
@@ -18,6 +22,7 @@ const departmentToTableMap: Record<string, keyof typeof tableSchemas> = {
   "CITY TYRE_Maintenance": "CITY TYRE_Maintenance",
 
   "MILLER_Production": "MILLER_Production",
+  "MILLER_Quality Controller": "MILLER_Supervisor",
   "MILLER_Supervisor": "MILLER_Supervisor",
   "MILLER_Sales": "MILLER_Sales",
   "MILLER_Maintenance": "MILLER_Maintenance",
@@ -41,35 +46,28 @@ const departmentToTableMap: Record<string, keyof typeof tableSchemas> = {
 
 const EmployeeProfilePage: React.FC = () => {
   const router = useRouter();
-  const [tableKey, setTableKey] = useState(0);
   const params = useParams();
   const [updateFlag, setUpdateFlag] = useState(0);
 
   const empIdParam = params?.id;
   const empId = Array.isArray(empIdParam) ? empIdParam[0] : empIdParam;
 
-  if (!empId) return <p>Employee ID not found</p>; // ✅ ensure string
+  if (!empId) return <p className="p-10 text-white">Employee ID not found</p>;
 
   const employee = employees.find(
     (e) => e.id.toLowerCase() === empId.toLowerCase()
   );
-  if (!employee) return <p>Employee not found</p>;
+  if (!employee) return <p className="p-10 text-white">Employee not found</p>;
 
-  const org = employee.organization.trim();
+  const org = employee.organization.trim() as "CITY TYRE" | "MILLER";
   const dept = employee.department.trim();
-
-  const lookupKey = `${org}_${dept}` as keyof typeof departmentToTableMap;
+  const lookupKey = `${org}_${dept}`;
 
   let tableType: keyof typeof tableSchemas | undefined;
   if (org.toUpperCase() === "CAFE") {
     tableType = "CAFE_Java";
   } else {
-    tableType = departmentToTableMap[lookupKey];
-  }
-
-  if (!tableType) {
-    console.error("No table for:", { org, dept, lookupKey });
-    return <p>No table available for this department</p>;
+    tableType = (departmentToTableMap[lookupKey] || "CITY TYRE_Production") as keyof typeof tableSchemas;
   }
 
   const avatar = employee.gender === "female" ? "/avatars/female.avif" : "/avatars/male.avif";
@@ -79,8 +77,20 @@ const EmployeeProfilePage: React.FC = () => {
     router.push("/employee/employee-login");
   };
 
+  const renderTable = () => {
+    const props = { empId, organization: org, department: dept, trigger: updateFlag };
+
+    if (tableType?.includes("Production")) return <ProductionTable {...props} />;
+    if (tableType?.includes("Maintenance")) return <MaintenanceTable {...props} />;
+    if (tableType?.includes("Sales")) return <SalesTable {...props} />;
+    if (tableType?.includes("Quality") || tableType?.includes("Supervisor")) return <QualityTable {...props} />;
+    if (tableType?.includes("Java") || org.toUpperCase() === "CAFE") return <CafeTable {...props} />;
+
+    return <ProductionTable {...props} />;
+  };
+
   return (
-    <div className="flex flex-col lg:flex-row gap-6 p-4 bg-[#e8effd]">
+    <div className="flex flex-col lg:flex-row gap-6 p-4 bg-[#e8effd] min-h-screen">
       <aside className="w-full sm:w-full md:w-[300px] lg:w-[320px] bg-gray-800 text-white p-4 rounded-lg flex-shrink-0 lg:sticky lg:top-4 overflow-y-auto mt-20">
         <div className="flex flex-col items-center gap-3 mb-8">
           <Image
@@ -92,13 +102,12 @@ const EmployeeProfilePage: React.FC = () => {
           />
           <button
             onClick={handleLogout}
-            className="mt-4 w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-bold"
+            className="mt-4 w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-bold transition-all"
           >
             Logout
           </button>
         </div>
 
-        {/* Employee details */}
         <div className="flex-1 grid gap-y-2 cursor-pointer w-full max-w-md mt-8">
           {Object.entries({
             Name: employee.name,
@@ -112,27 +121,25 @@ const EmployeeProfilePage: React.FC = () => {
             Age: employee.age,
             "Date of Joining": employee.DOJ,
             Place: employee.place,
-            Nationality: employee.nationality,
             Qualification: employee.qualification,
             Salary: employee.salary?.toLocaleString(),
           }).map(([key, value]) => (
-            <div key={key} className="grid grid-cols-2 border-b pb-5 hover:bg-[#3b3d3d]">
-              <p className="font-semibold">{key}:</p>
+            <div key={key} className="grid grid-cols-2 border-b border-gray-700 pb-3 hover:bg-gray-700 transition-colors">
+              <p className="font-semibold text-gray-400">{key}:</p>
               <p>{value}</p>
             </div>
           ))}
         </div>
       </aside>
 
-      <div className="mt-6 w-full px-2 sm:px-2 lg:ml-8 lg:w-[75%] mt-24 bg-[#2b3244] rounded-lg">
-        {/* Tyre production controls */}
-        <TyresProductionButton empId={empId} onUpdate={() => setUpdateFlag((prev) => prev + 1)} />
+      <div className="mt-24 w-full px-2 sm:px-2 lg:ml-8 flex-grow bg-[#2b3244] rounded-lg shadow-xl overflow-hidden">
+        <div className="p-4 border-b border-gray-700">
+          <TyresProductionButton empId={empId} onUpdate={() => setUpdateFlag((prev) => prev + 1)} />
+        </div>
 
-        {/* Production table */}
-        <ProductionTable trigger={updateFlag} />
-
-        {/* Employee table */}
-      
+        <div className="p-2">
+          {renderTable()}
+        </div>
       </div>
 
       <Attendance empId={employee.id} />

@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 const Footer = () => {
   return (
@@ -29,25 +30,35 @@ const Footer = () => {
                       to-[#2c364d] mt-10 flex justify-center items-center flex-col gap-4 ">
                         <h1 className="text-lg font-semibold  ">Ready to Secure Your Email Communication?</h1>
                         <div className="flex gap-4 ">
-                           <button
-  className="px-12 py-1 rounded-md cursor-pointer
-             bg-gradient-to-r from-[#eb722e] via-[#fa973b] to-[#f59237]
-             hover:from-[#ffcd03] hover:via-[#ffb703] hover:to-[#ffa200]
-             transition-all duration-300">
-  Start
-</button>
+                           <Link href="/startbutton">
+  <button
+    className="px-12 py-1 rounded-md cursor-pointer
+               bg-gradient-to-r from-[#eb722e] via-[#fa973b] to-[#f59237]
+               hover:from-[#ffcd03] hover:via-[#ffb703] hover:to-[#ffa200]
+               transition-all duration-300"
+  >
+    Start
+  </button>
+</Link>
 
+ <Link href="/contact-us">
 <button className="border px-12 py-1 rounded-sm cursor-pointer hover:bg-[#2f384e]">Contact Us</button>
-
+</Link>
                         </div>
                        
       </div>
       <div
        className=" mt-4  
-       bg-gradient-to-r from-[#102750] via-[#455880] to-[#8a9bc5] flex justify-center items-center ">
-        <p className="cursor-pointer hover:text-[green] mr-4">Privacy Policy | </p> 
+       bg-gradient-to-r from-[#102750] via-[#455880] to-[#8a9bc5] flex justify-center items-center mb-5 ">
+        <Link href="/privacypolicy">
+        <p className="cursor-pointer hover:text-[green] mr-4">Privacy Policy | </p>
+        </Link>
+        <Link href="/termsofservice"> 
         <p className="cursor-pointer hover:text-[green] mr-4"> Tearms of Service | </p>
-        <p className="cursor-pointer hover:text-[green]"> Cookies </p></div>
+        </Link>
+        <Link href="/cookies">
+        <p className="cursor-pointer hover:text-[green]"> Cookies </p>
+        </Link></div>
     </div>
   ); 
 };

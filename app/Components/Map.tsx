@@ -13,16 +13,19 @@ const Map = () => {
       image: "/img/website.png",
       heading: "Screenshots & Website",
       para: "Track apps and Websites",
+      link:"/features/screenshots"
     },
     {
       image: "/img/attenance.png",
       heading: "Attendance Management",
       para: "Check-in & Attendance Reports",
+       link: "/features/attendance",
     },
     {
       image: "/img/taskproject.png",
       heading: "Task & Project Management",
       para: "Assign & Track Tasks",
+      link: "/features/tasks",
     },
   ];
 

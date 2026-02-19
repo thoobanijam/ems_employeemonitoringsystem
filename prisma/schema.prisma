@@ -13,15 +13,16 @@ enum Role {
 }
 
 model User {
-  id          String   @id @default(uuid())
-  email       String   @unique
-  phone       String?
-  password    String
-  role        Role
-  isActive    Boolean  @default(true)
-  employee    Employee?
-  otpCodes    OTP[]
-  createdAt   DateTime @default(now())
+  id         String    @id @default(uuid())
+  email      String    @unique
+  phone      String?
+  password   String
+  role       Role
+  isActive   Boolean   @default(true)
+  employee   Employee? @relation(fields: [employeeId], references: [id])
+  otpCodes   OTP[]
+  createdAt  DateTime  @default(now())
+  employeeId String?
 }
 
 model OTP {
@@ -39,34 +40,37 @@ model Organization {
 }
 
 model Department {
-  id             String  @id @default(uuid())
+  id             String       @id @default(uuid())
   name           String
   organizationId String
   teams          Team[]
+  Organization   Organization @relation(fields: [organizationId], references: [id])
 }
 
 model Team {
-  id           String @id @default(uuid())
+  id           String     @id @default(uuid())
   name         String
   departmentId String
+  Department   Department @relation(fields: [departmentId], references: [id])
 }
 
 model Employee {
-  id         String   @id @default(uuid())
+  id         String     @id @default(uuid())
   firstName  String
   lastName   String
-  email      String   @unique
-  phone      String? 
+  email      String     @unique
+  phone      String?
   department String?
   team       String?
-  role       Role     @default(EMPLOYEE)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  role       Role       @default(EMPLOYEE)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  User       User[]
+  DailyLog   DailyLog[]
 }
 
-
 model Attendance {
-  id         String   @id @default(uuid())
+  id         String    @id @default(uuid())
   employeeId String
   checkIn    DateTime
   checkOut   DateTime?
@@ -83,10 +87,10 @@ model ActivityLog {
 }
 
 model Task {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   title       String
   description String?
-  assignedTo  String?   // Employee ID
+  assignedTo  String? // Employee ID
   department  String?
   team        String?
   priority    Priority  @default(MEDIUM)
@@ -116,6 +120,7 @@ model Message {
   read       Boolean  @default(false)
   createdAt  DateTime @default(now())
 }
+
 model HRMail {
   id         String   @id @default(uuid())
   senderId   String
@@ -128,4 +133,29 @@ model HRMail {
   createdAt  DateTime @default(now())
 }
 
+model DailyLog {
+  id         String   @id @default(uuid())
+  employeeId String
+  date       String // YYYY-MM-DD
+  data       Json // Stores AttendanceDay data (login times, etc.)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
+  employee Employee @relation(fields: [employeeId], references: [id])
+
+  @@unique([employeeId, date])
+}
+
+model Batch {
+  id           String   @id @default(uuid())
+  batchNo      String // Unique identifier
+  date         String // Manufacturing Date (YYYY-MM-DD)
+  organization String // e.g., "CITY TYRE"
+  department   String // Created by which dept (usually Production)
+  createdAt    DateTime @default(now())
+
+  // Optional: Link to creator if needed
+  createdBy String?
+
+  @@unique([batchNo, organization]) // Unique within organization
+}

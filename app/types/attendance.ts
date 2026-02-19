@@ -25,15 +25,21 @@ export interface AttendanceDay {
   billNo?: string[];
 
   // Additional fields for production
-   manufacturingDate?: string[];
-     
-  expiryDate?: string;
+  manufacturingDate?: string[];
+  expiryDate?: string[];
+
+  // Track status per batch (shared across departments)
+  maintenanceStatus?: Record<string, "Pending" | "Accepted">;
+  salesStatus?: Record<string, "Pending" | "Sold">;
+  salesBillNo?: Record<string, string>;
+  salesTyreModel?: Record<string, string>;
+  maintenanceRemark?: string;
 
   // Cafe stock
-  openingStock?: number;
-  closingStock?: number;
+  openingStock?: any;
+  closingStock?: any;
 
-   [key: string]: string | number | string[] | undefined;
+  [key: string]: any;
 }
 
 export interface AttendanceData {

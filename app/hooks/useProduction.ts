@@ -32,14 +32,21 @@ export default function useProductionBatch(trigger?: number) {
   ) => {
     setData((prev) => {
       const updatedData = { ...prev };
-      if (!updatedData[date]) updatedData[date] = { batchNo: [], manufacturingDate: [] };
+
+      if (!updatedData[date]) {
+        updatedData[date] = { batchNo: [], manufacturingDate: [] };
+      }
 
       if (!updatedData[date].batchNo.includes(batchNo)) {
         updatedData[date].batchNo.push(batchNo);
         updatedData[date].manufacturingDate.push(manufacturingDate);
       }
 
-      localStorage.setItem("productionBatchData", JSON.stringify(updatedData));
+      localStorage.setItem(
+        "productionBatchData",
+        JSON.stringify(updatedData)
+      );
+
       return updatedData;
     });
   };
