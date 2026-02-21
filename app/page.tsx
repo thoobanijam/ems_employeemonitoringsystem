@@ -1,9 +1,10 @@
 import Image from "next/image";
-import LandingPage from "./Components/LandingPage";
-import Map from "./Components/Map";
-import PowerfullFeatures from "./Components/PowerfullFeatures";
-import WhoBenefit from "./Components/WhoBenefit";
-import Footer from "./Components/Footer";
+
+import LandingPage from "./components/LandingPage";
+import Map from "./components/Map";
+import PowerfullFeatures from "./components/PowerfullFeatures";
+import WhoBenefit from "./components/WhoBenefit";
+import Footer from "./components/Footer";
 
 
 export default function Home() {
@@ -11,9 +12,9 @@ export default function Home() {
     <div className="   ">
   <LandingPage/>
   <Map/>
-  <PowerfullFeatures/>
+<PowerfullFeatures/>
   <WhoBenefit/>
-  <Footer/>
+ <Footer/>
     </div>
   );
 }

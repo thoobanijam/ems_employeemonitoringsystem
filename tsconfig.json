@@ -23,11 +23,9 @@
         "name": "next"
       }
     ],
-    "paths": {
-      "@/*": [
-        "./*"
-      ]
-    }
+   "paths": {
+  "@/*": ["./app/*"]
+}
   },
   "include": [
     "./app/**/*.{js,ts,jsx,tsx}",
