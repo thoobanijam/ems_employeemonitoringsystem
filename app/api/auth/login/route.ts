@@ -1,25 +1,25 @@
-import { NextResponse } from "next/server"
-import { prisma } from "@/app/lib/prisma"
-import { generateOTP, otpExpiry } from "@/app/lib/otp"
-import bcrypt from "bcryptjs"
 
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { generateOTP, otpExpiry } from "@/lib/otp";
+import bcrypt from "bcryptjs";
 
 export async function POST(req: Request) {
-  const { email, password } = await req.json()
+  const { email, password } = await req.json();
 
-  const user = await prisma.user.findUnique({ where: { email } })
+  const user = await prisma.user.findUnique({ where: { email } });
   if (!user || !user.isActive) {
-    return NextResponse.json({ error: "Invalid credentials" }, { status: 401 })
+    return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
   }
 
-  const isValid = await bcrypt.compare(password, user.password)
+  const isValid = await bcrypt.compare(password, user.password);
   if (!isValid) {
-    return NextResponse.json({ error: "Invalid credentials" }, { status: 401 })
+    return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
   }
 
   // OTP only for employees
   if (user.role === "EMPLOYEE") {
-    const code = generateOTP()
+    const code = generateOTP();
 
     await prisma.oTP.create({
       data: {
@@ -27,11 +27,11 @@ export async function POST(req: Request) {
         userId: user.id,
         expiresAt: otpExpiry()
       }
-    })
+    });
 
-    console.log("OTP (send via email/SMS):", code)
+    console.log("OTP (send via email/SMS):", code);
 
-    return NextResponse.json({ otpRequired: true })
+    return NextResponse.json({ otpRequired: true });
   }
 
   // Admin direct login
@@ -39,5 +39,5 @@ export async function POST(req: Request) {
     success: true,
     role: user.role,
     userId: user.id
-  })
+  });
 }
