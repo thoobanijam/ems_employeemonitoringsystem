@@ -8,8 +8,8 @@ import { FaUsers, FaTasks, FaMapMarkerAlt } from "react-icons/fa";
 import { MdTrackChanges, MdOutlineAccessTime } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
-import Organization from "@/Components/Organization";
-import EmployeeDashboard from "@/employee/employee/employeedashboard/page";
+import Organization from "@/components/Organization"
+
 
 
 

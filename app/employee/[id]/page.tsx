@@ -2,14 +2,14 @@
 
 import React, { useState } from "react";
 import { employees } from "@/data/employee";
-import EmployeeTable from "@/Components/EmployeeTable";
-import Attendance from "@/Components/Attendance";
-import TyresProductionButton from "@/Components/TyresProductionButton";
-import ProductionTable from "@/Components/production/ProductionTable";
-import MaintenanceTable from "@/Components/maintenance/MaintenanceTable";
-import SalesTable from "@/Components/Sales/SalesTable";
-import QualityTable from "@/Components/quality/QualityTable";
-import CafeTable from "@/Components/cafe/CafeTable";
+import EmployeeTable from "@/components/EmployeeTable";
+import Attendance from "@/components/Attendance";
+import TyresProductionButton from "@/components/TyresProductionButton";
+import ProductionTable from "@/components/production/ProductionTable";
+import MaintenanceTable from "@/components/maintenance/MaintenanceTable";
+import SalesTable from "@/components/Sales/SalesTable";
+import QualityTable from "@/components/quality/QualityTable";
+import CafeTable from "@/components/cafe/CafeTable";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { tableSchemas } from "@/data/tableSchemas";
