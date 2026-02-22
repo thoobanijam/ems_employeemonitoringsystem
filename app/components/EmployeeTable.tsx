@@ -8,6 +8,7 @@ import { getDailyLogs, saveDailyLog } from "@/actions/dailyLog";
 import { addBatch, getBatches } from "@/actions/batch";
 
 interface EmployeeTableProps {
+  headers: string[];
   employee: Employee;
   tableType: keyof typeof tableSchemas;
 }
@@ -45,7 +46,7 @@ const formatDisplayDate = (isoDate: string) => {
   return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
 };
 
-const EmployeeTable: React.FC<EmployeeTableProps> = ({ employee, tableType }) => {
+const EmployeeTable: React.FC<EmployeeTableProps> = ({ headers,employee, tableType }) => {
   const [attendance, setAttendance] = useState<Record<string, AttendanceDay>>({});
   const [loading, setLoading] = useState(true);
   const [selectedRow, setSelectedRow] = useState<string | null>(null);

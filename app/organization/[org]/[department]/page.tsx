@@ -1,11 +1,10 @@
 "use client";
 
 import React from "react";
-import { employees } from "@data/employee";
-import { Employee } from "@types/employee";
-import { tableSchemas } from "@data/tableSchemas";
-import EmployeeTable from "@components/EmployeeTable";
-
+import { employees } from "@/data/employee";
+import { Employee } from "@/types/employee";
+import { tableSchemas } from "@/data/tableSchemas";
+import EmployeeTable from "@/components/EmployeeTable";
 interface DepartmentPageProps {
   params: {
     org: string;
@@ -34,18 +33,26 @@ export default function DepartmentPage({ params }: DepartmentPageProps) {
 
       {teams.map((team) => {
         const headers: string[] =
-          tableSchemas[`${org}_${department}_${team}`] ||
-          tableSchemas[`${org}_${department}`] ||
-          tableSchemas["CAFE_DEFAULT"] ||
+          tableSchemas[`${org}_${department}_${team}`]?.headers ||
+          tableSchemas[`${org}_${department}`]?.headers ||
+          tableSchemas["CAFE_Inventory"]?.headers ||
           [];
+
+        const teamEmployees = deptEmployees.filter((e: Employee) => e.team === team);
+        const schemaKey = tableSchemas[`${org}_${department}_${team}`]
+          ? `${org}_${department}_${team}`
+          : tableSchemas[`${org}_${department}`]
+          ? `${org}_${department}`
+          : `CAFE_Inventory`;
 
         return (
           <div key={team} className="mt-6">
             <h2 className="text-xl font-semibold mb-2">{team}</h2>
-            <EmployeeTable
-              headers={headers}
-              employees={deptEmployees.filter((e: Employee) => e.team === team)}
-            />
+            {teamEmployees.map((emp) => (
+              <div key={emp.id} className="mb-4">
+                <EmployeeTable headers={headers} employee={emp} tableType={schemaKey as any} />
+              </div>
+            ))}
           </div>
         );
       })}
