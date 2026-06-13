@@ -1,26 +1,16 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   --brand: #edf4fe;
   --background: #edf4fe;
-  --foreground: #ffffff;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #edf4fe;
-    --foreground: #ffffff;
-  }
+  --foreground: #111;
 }
 
 html,
 body {
-  background-color: var(--background) !important;
+  background-color: var(--background);
   color: var(--foreground);
   min-height: 100%;
 }
